@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "FMDBHelper.h"
+#import "DataModel.h"
 
 @interface ViewController ()
 
@@ -17,6 +19,39 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    NSLog(@"%@", NSHomeDirectory());
+    
+    [self testFMDB];
+}
+
+- (void)testFMDB
+{
+    DataModel *model = [[DataModel alloc] init];
+    
+    //1, 向数据库中插入数据
+//    [FMDBHelper insertRecordWithTableName:@"DataModel" andModel:model];
+    
+//    [FMDBHelper insertRecordWithTableName:@"DataModel" andModelArray:@[model, model]];
+    
+    //2, 从数据库中删除数据
+//    [FMDBHelper deleteRecordWithTableName:@"DataModel" andProperty:@"primaryId" andValue:@2];
+    
+//    [FMDBHelper deleteReCordWithTableName:@"DataModel"];
+    
+    //3, 更新数据
+//    model.name = @"WHealer";
+//    model.title = @"My Girl";
+//    model.sex = @"girl";
+//    [FMDBHelper insertRecordWithTableName:@"DataModel" andModel:model];
+//    [FMDBHelper updateRecordWithObject:model andKeyProperty:@"name"];
+
+    //4, 查找数据
+//    NSArray *alldata = [FMDBHelper getAllRecod:@"DataModel"];
+//    NSArray *someData = [FMDBHelper getRecordWithTableName:@"DataModel" keyProperty:@"name" keyValue:@"WHealer"];
+    
+    
+    
+//    NSLog(@"%@", someData);
 }
 
 - (void)didReceiveMemoryWarning {
