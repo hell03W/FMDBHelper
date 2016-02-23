@@ -25,7 +25,7 @@
 + (NSDictionary *)dictionaryWithObject:(id)model;
 
 //5，字典转换成Model
-+ (id)customObject:(NSString *)model fromDictionary:(NSDictionary *)dict;
++ (id)customObject:(NSString *)classStr fromDictionary:(NSDictionary *)dict;
 
 
 @end

@@ -29,13 +29,12 @@
     DataModel *model = [[DataModel alloc] init];
     
     //1, 向数据库中插入数据
-//    [FMDBHelper insertRecordWithTableName:@"DataModel" andModel:model];
-    
-//    [FMDBHelper insertRecordWithTableName:@"DataModel" andModelArray:@[model, model]];
+//    [FMDBHelper insertRecordWithModel:model];
+//    [FMDBHelper insertRecordWithModelArray:@[model, model]];
     
     //2, 从数据库中删除数据
-//    [FMDBHelper deleteRecordWithTableName:@"DataModel" andProperty:@"primaryId" andValue:@2];
-    
+//    [FMDBHelper deleteReCordWithTableName:@"DataModel" andKeyProperty:@"primedId" andKeyValue:@2];
+//    [FMDBHelper deleteRecordWithModel:model andKeyProperty:@"name"];
 //    [FMDBHelper deleteReCordWithTableName:@"DataModel"];
     
     //3, 更新数据
@@ -46,8 +45,8 @@
 //    [FMDBHelper updateRecordWithObject:model andKeyProperty:@"name"];
 
     //4, 查找数据
-//    NSArray *alldata = [FMDBHelper getAllRecod:@"DataModel"];
-//    NSArray *someData = [FMDBHelper getRecordWithTableName:@"DataModel" keyProperty:@"name" keyValue:@"WHealer"];
+    NSArray *alldata = [FMDBHelper getAllRecod:@"DataModel"];
+    NSArray *someData = [FMDBHelper getRecordWithTableName:@"DataModel" keyProperty:@"name" keyValue:@2];
     
     
     

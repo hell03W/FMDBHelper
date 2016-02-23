@@ -142,8 +142,9 @@ static FMDBHelper *fmdbHelper;
 
 #pragma mark - 插入记录
 //4, 像数据库中插入一个Model
-+ (BOOL)insertRecordWithTableName:(NSString *)tableName andModel:(id)object
++ (BOOL)insertRecordWithModel:(id)object
 {
+    NSString *tableName = NSStringFromClass([object class]);
     BOOL value = NO;
     FMDBHelper *helper = [FMDBHelper shareHelper];
     
@@ -185,14 +186,14 @@ static FMDBHelper *fmdbHelper;
 }
 
 //5, 以model数组的形式请求插入用户数据
-+ (BOOL)insertRecordWithTableName:(NSString *)tableName andModelArray:(NSArray *)arr
++ (BOOL)insertRecordWithModelArray:(NSArray *)arr
 {
     BOOL value = NO;
     FMDBHelper *helper = [FMDBHelper shareHelper];
     [helper.fmdb beginTransaction]; //开启事务
     
     for (id object in arr) {
-        value = [FMDBHelper insertRecordWithTableName:tableName andModel:object];
+        value = [FMDBHelper insertRecordWithModel:object];
     }
     
     [helper.fmdb commit]; //终止事务
@@ -201,7 +202,7 @@ static FMDBHelper *fmdbHelper;
 
 #pragma mark - 删除记录
 //6, 删除记录 删除某个属性等于某个值得一个记录   比如  id = 100
-+ (void)deleteRecordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value
++ (void)deleteReCordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
     
@@ -210,6 +211,13 @@ static FMDBHelper *fmdbHelper;
     [sqlString appendString:[NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ = ?", tableName, property]];
     
     [helper.fmdb executeUpdate:sqlString withArgumentsInArray:[NSArray arrayWithObject:value]];
+}
+
++ (void)deleteRecordWithModel:(id)model andKeyProperty:(NSString *)property
+{
+    NSString *tableName = NSStringFromClass([model class]);
+    id value = [model valueForKey:property];
+    [self deleteReCordWithTableName:tableName andKeyProperty:property andKeyValue:value];
 }
 
 //7, 删除一个表中所有信息

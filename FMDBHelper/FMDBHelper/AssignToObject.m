@@ -99,7 +99,7 @@
 }
 
 //5，字典转换成Model
-+ (id)customModel:(NSString *)model fromDictionary:(NSDictionary *)dict
++ (id)customObject:(NSString *)model fromDictionary:(NSDictionary *)dict
 {
     return [[self customModel:model fromArray:[NSArray arrayWithObject:dict]] firstObject];
 }
