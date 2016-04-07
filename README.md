@@ -31,10 +31,52 @@
 ```
 
 #### FMDBHelper
+
+##### pragma mark 推荐使用以下的方法进行数据库操作, 以下方法包含了所有FMDBHelper的方法
+** NSObject的分类, 可以直接调用通过model对象调用相应的方法, 插入更新数据. **
+
+**推荐使用model的类方法或者实例方法直接增删改查数据库数据.**
+
+```
+
+@interface NSObject (FMDBHelper)
+
+ #pragma mark - 插入记录
+- (BOOL)insertRecord;
+
+ #pragma mark - 删除记录
+// 删除数据库表中对应数据库类名所有的数据
++ (void)deleteDataBaseTable;
+// 根据对象, 删除其在数据库中的记录
+- (void)deleteRecord;
+// 删除对象的指定属性, 指定值得数据库行
++ (void)deleteRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value;
+// 根据对象keyProperty删除记录
+- (void)deleteRecordWithKeyProperty:(NSString *)property;
+// 根据对象属性删除记录
+
+
+ #pragma mark - 修改记录
+- (void)updateRecordWithKeyProperty:(NSString *)keyProperty;
+
+ #pragma mark - 查找记录
++ (NSMutableArray *)getAllRecod;
++ (NSMutableArray *)getRecordWithKeyProperty:(NSString *)property keyValue:(id)value;
+
+@end
+
+@interface NSMutableArray (FMDBHelper)
+
+ #pragma mark - 插入记录
+- (BOOL)insertRecord;
+
+@end
+```
+
 ``` 
 @interface FMDBHelper : NSObject
 
-#pragma mark - 基础的方法
+ #pragma mark - 基础的方法
 // 1, 数据库工具类的单例
 + (id)shareHelper;
 
@@ -45,7 +87,7 @@
 + (BOOL)isExistTable:(NSString *)tableName andObject:(id)object;
 
 
-#pragma mark - 插入记录
+ #pragma mark - 插入记录
 //4, 像数据库中插入一个Model
 + (BOOL)insertRecordWithModel:(id)object;
 
@@ -53,7 +95,7 @@
 + (BOOL)insertRecordWithModelArray:(NSArray *)arr;
 
 
-#pragma mark - 删除记录
+ #pragma mark - 删除记录
 //6, 删除记录 删除某个属性等于某个值得一个记录   比如  id = 100
 + (void)deleteReCordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value;
 + (void)deleteRecordWithModel:(id)model andKeyProperty:(NSString *)property;
@@ -62,12 +104,12 @@
 + (void)deleteReCordWithTableName:(NSString *)tableName;
 
 
-#pragma mark - 修改记录
+ #pragma mark - 修改记录
 //8, 修改记录
 + (void)updateRecordWithObject:(id)obj andKeyProperty:(NSString *)keyProperty;
 
 
-#pragma mark - 查找记录
+ #pragma mark - 查找记录
 //9, 根据数据库的表名称 查询数据库表中所有的数据对象
 + (NSMutableArray *)getAllRecod:(NSString *)tableName;
 
@@ -81,30 +123,37 @@
 1, 向数据库中插入一条model数据
 
 ```
-[FMDBHelper insertRecordWithModel:model];
-[FMDBHelper insertRecordWithModelArray:@[model, model]];
+/// 根据实例对象插入一条记录
+[model insertRecord];
+/// 插入数组中所有数据到数据库中, 可以是不同的对象
+[arr insertRecordFromArray];
 ```
 2, 从数据库中删除数据
 
 ```
-[FMDBHelper deleteReCordWithTableName:@"DataModel" andKeyProperty:@"primedId" andKeyValue:@2];
-[FMDBHelper deleteRecordWithModel:model andKeyProperty:@"name"];
-[FMDBHelper deleteReCordWithTableName:@"DataModel"];
+/// 删除数据库表中对应数据库类名所有的数据
+[model deleteRecord];
+/// 根据对象, 删除其在数据库中的记录
+[model deleteRecordWithKeyProperty:@"name"];
+/// 删除对象的指定属性, 指定值得数据库行
+[DataModel deleteDataBaseTable];
+/// 根据对象keyProperty删除记录
+[DataModel deleteRecordWithKeyProperty:@"name" andKeyValue:@"小明"];
 ```
 3, 更新model中的数据
 
 ```
-model.name = @"WHealer";
-model.title = @"My Girl";
-model.sex = @"girl";
-[FMDBHelper insertRecordWithTableName:@"DataModel" andModel:model];
-[FMDBHelper updateRecordWithObject:model andKeyProperty:@"name"];
+/// 修改数据库中数据
+// keyProperty作用是找到对应的记录
+[model updateRecordWithKeyProperty:@"name"];
 ```
 4, 从数据库中查找数据
 
 ```
-NSArray *alldata = [FMDBHelper getAllRecod:@"DataModel"];
-NSArray *someData = [FMDBHelper getRecordWithTableName:@"DataModel" keyProperty:@"name" keyValue:@2];
+/// 获取对象名字在数据库中所有记录
+NSArray *arr2 = [DataModel getAllRecod];
+/// 根据keyProperty和keyvalue获取指定的记录
+NSArray *arr3 = [DataModel getRecordWithKeyProperty:@"name" keyValue:@"小明"];
 ```
 
 

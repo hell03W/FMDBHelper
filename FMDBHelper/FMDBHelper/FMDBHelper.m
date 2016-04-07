@@ -217,12 +217,11 @@ static FMDBHelper *fmdbHelper;
 + (void)deleteRecordWithModel:(id)model
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
-    
     NSString *className = [NSString stringWithUTF8String:class_getName([model class])];
     
-    NSDictionary *valueKey = [AssignToObject dictionaryWithObject:model];
-    NSArray *keysArray = [valueKey allKeys];
-    NSArray *valuesArray = [valueKey allValues];
+    NSDictionary *dict = [AssignToObject dictionaryWithObject:model];
+    NSArray *keysArray = [dict allKeys];
+    NSArray *valuesArray = [dict allValues];
     NSMutableString *sqlString = [NSMutableString stringWithFormat:@"DELETE FROM %@", className];
     if (keysArray.count > 0) {
         
@@ -239,9 +238,8 @@ static FMDBHelper *fmdbHelper;
         [sqlString deleteCharactersInRange:NSMakeRange(sqlString.length-4, 4)];
     }
     
-    NSLog(@" sqlString = %@ ", sqlString);
+
     [helper.fmdb executeUpdate:sqlString];
-    
 }
 
 + (void)deleteRecordWithModel:(id)model andKeyProperty:(NSString *)property
@@ -381,10 +379,10 @@ static FMDBHelper *fmdbHelper;
 
 @end
 
-@implementation NSMutableArray (FMDBHelper)
+@implementation NSArray (FMDBHelper)
 
 #pragma mark - 插入记录
-- (BOOL)insertRecord {
+- (BOOL)insertRecordFromArray {
     
     return [FMDBHelper insertRecordWithModelArray:self];
 }

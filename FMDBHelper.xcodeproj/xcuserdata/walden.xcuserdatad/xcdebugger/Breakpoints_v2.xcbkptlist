@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FMDBHelper/ViewController.m"
-            timestampString = "481713732.885112"
+            timestampString = "481717706.639131"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
             landmarkName = "-testFMDB"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,12 +26,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FMDBHelper/FMDBHelper/FMDBHelper.m"
-            timestampString = "481715608.613732"
+            timestampString = "481717167.02713"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "237"
-            endingLineNumber = "237"
-            landmarkName = "+deleteRecordWithModel:"
+            startingLineNumber = "387"
+            endingLineNumber = "387"
+            landmarkName = "-insertRecordFromArray"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FMDBHelper/FMDBHelper/FMDBHelper.m"
+            timestampString = "481717177.219408"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "336"
+            endingLineNumber = "336"
+            landmarkName = "-insertRecord"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

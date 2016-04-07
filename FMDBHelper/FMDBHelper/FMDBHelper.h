@@ -55,38 +55,44 @@
 @end
 
 
-#pragma mark - 修改, 将助手写成NSObject的分类, 这样, 只要引入就可以存取数据库了, 是不是更加方便了 ?
+
+#pragma mark 推荐使用以下的方法进行数据库操作, 以下方法包含了所有FMDBHelper的方法
 // NSObject的分类, 可以直接调用通过model对象调用相应的方法, 插入更新数据
 @interface NSObject (FMDBHelper)
 
 #pragma mark - 插入记录
+/// 根据实例对象插入一条记录
 - (BOOL)insertRecord;
 
 #pragma mark - 删除记录
-// 删除数据库表中对应数据库类名所有的数据
+/// 删除数据库表中对应数据库类名所有的数据
 + (void)deleteDataBaseTable;
-// 根据对象, 删除其在数据库中的记录
+/// 根据对象, 删除其在数据库中的记录
 - (void)deleteRecord;
-// 删除对象的指定属性, 指定值得数据库行
+/// 删除对象的指定属性, 指定值得数据库行
 + (void)deleteRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value;
-// 根据对象keyProperty删除记录
+/// 根据对象keyProperty删除记录
 - (void)deleteRecordWithKeyProperty:(NSString *)property;
-// 根据对象属性删除记录
 
 
 #pragma mark - 修改记录
+/// 修改数据库中数据
+// keyProperty作用是找到对应的记录
 - (void)updateRecordWithKeyProperty:(NSString *)keyProperty;
 
 #pragma mark - 查找记录
+/// 获取对象名字在数据库中所有记录
 + (NSMutableArray *)getAllRecod;
+/// 根据keyProperty和keyvalue获取指定的记录
 + (NSMutableArray *)getRecordWithKeyProperty:(NSString *)property keyValue:(id)value;
 
 @end
 
-@interface NSMutableArray (FMDBHelper)
+@interface NSArray (FMDBHelper)
 
 #pragma mark - 插入记录
-- (BOOL)insertRecord;
+/// 插入数组中所有数据到数据库中, 可以是不同的对象
+- (BOOL)insertRecordFromArray;
 
 @end
 
