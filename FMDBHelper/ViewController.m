@@ -29,8 +29,8 @@
     DataModel *model = [[DataModel alloc] init];
     
     //1, 向数据库中插入数据
-//    [FMDBHelper insertRecordWithModel:model];
-//    [FMDBHelper insertRecordWithModelArray:@[model, model]];
+    [FMDBHelper insertRecordWithModel:model];
+    [FMDBHelper insertRecordWithModelArray:@[model, model]];
     
     //2, 从数据库中删除数据
 //    [FMDBHelper deleteReCordWithTableName:@"DataModel" andKeyProperty:@"primedId" andKeyValue:@2];
@@ -48,6 +48,9 @@
     NSArray *alldata = [FMDBHelper getAllRecod:@"DataModel"];
     NSArray *someData = [FMDBHelper getRecordWithTableName:@"DataModel" keyProperty:@"name" keyValue:@2];
     
+    [model deleteRecord];
+    
+    alldata = [FMDBHelper getAllRecod:@"DataModel"];
     
     
 //    NSLog(@"%@", someData);

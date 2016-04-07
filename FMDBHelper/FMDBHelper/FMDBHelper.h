@@ -32,11 +32,12 @@
 
 #pragma mark - 删除记录
 //6, 删除记录 删除某个属性等于某个值得一个记录   比如  id = 100
-+ (void)deleteReCordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value;
++ (void)deleteRecordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value;
++ (void)deleteRecordWithModel:(id)model;
 + (void)deleteRecordWithModel:(id)model andKeyProperty:(NSString *)property;
 
 //7, 删除一个表中所有信息
-+ (void)deleteReCordWithTableName:(NSString *)tableName;
++ (void)deleteRecordWithTableName:(NSString *)tableName;
 
 
 #pragma mark - 修改记录
@@ -52,3 +53,42 @@
 + (NSMutableArray *)getRecordWithTableName:(NSString *)tableName keyProperty:(NSString *)property keyValue:(id)value;
 
 @end
+
+
+#pragma mark - 修改, 将助手写成NSObject的分类, 这样, 只要引入就可以存取数据库了, 是不是更加方便了 ?
+// NSObject的分类, 可以直接调用通过model对象调用相应的方法, 插入更新数据
+@interface NSObject (FMDBHelper)
+
+#pragma mark - 插入记录
+- (BOOL)insertRecord;
+
+#pragma mark - 删除记录
+// 删除数据库表中对应数据库类名所有的数据
++ (void)deleteDataBaseTable;
+// 根据对象, 删除其在数据库中的记录
+- (void)deleteRecord;
+// 删除对象的指定属性, 指定值得数据库行
++ (void)deleteRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value;
+// 根据对象keyProperty删除记录
+- (void)deleteRecordWithKeyProperty:(NSString *)property;
+// 根据对象属性删除记录
+
+
+#pragma mark - 修改记录
+- (void)updateRecordWithKeyProperty:(NSString *)keyProperty;
+
+#pragma mark - 查找记录
++ (NSMutableArray *)getAllRecod;
++ (NSMutableArray *)getRecordWithKeyProperty:(NSString *)property keyValue:(id)value;
+
+@end
+
+@interface NSMutableArray (FMDBHelper)
+
+#pragma mark - 插入记录
+- (BOOL)insertRecord;
+
+@end
+
+
+

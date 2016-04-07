@@ -9,6 +9,7 @@
 #import "FMDBHelper.h"
 #import "AssignToObject.h"
 #import <stdarg.h>
+#import <objc/runtime.h>
 
 @interface FMDBHelper ()
 
@@ -202,7 +203,7 @@ static FMDBHelper *fmdbHelper;
 
 #pragma mark - 删除记录
 //6, 删除记录 删除某个属性等于某个值得一个记录   比如  id = 100
-+ (void)deleteReCordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value
++ (void)deleteRecordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
     
@@ -213,15 +214,45 @@ static FMDBHelper *fmdbHelper;
     [helper.fmdb executeUpdate:sqlString withArgumentsInArray:[NSArray arrayWithObject:value]];
 }
 
++ (void)deleteRecordWithModel:(id)model
+{
+    FMDBHelper *helper = [FMDBHelper shareHelper];
+    
+    NSString *className = [NSString stringWithUTF8String:class_getName([model class])];
+    
+    NSDictionary *valueKey = [AssignToObject dictionaryWithObject:model];
+    NSArray *keysArray = [valueKey allKeys];
+    NSArray *valuesArray = [valueKey allValues];
+    NSMutableString *sqlString = [NSMutableString stringWithFormat:@"DELETE FROM %@", className];
+    if (keysArray.count > 0) {
+        
+        [sqlString appendString:@" WHERE "];
+    }
+    for (int i = 0; i < valuesArray.count; i++) {
+        
+        id value = [valuesArray objectAtIndex:i];
+        NSString *key = [keysArray objectAtIndex:i];
+        [sqlString appendFormat:@" %@ = '%@' AND ", key, value];
+    }
+    if (keysArray.count > 0) {
+        
+        [sqlString deleteCharactersInRange:NSMakeRange(sqlString.length-4, 4)];
+    }
+    
+    NSLog(@" sqlString = %@ ", sqlString);
+    [helper.fmdb executeUpdate:sqlString];
+    
+}
+
 + (void)deleteRecordWithModel:(id)model andKeyProperty:(NSString *)property
 {
     NSString *tableName = NSStringFromClass([model class]);
     id value = [model valueForKey:property];
-    [self deleteReCordWithTableName:tableName andKeyProperty:property andKeyValue:value];
+    [self deleteRecordWithTableName:tableName andKeyProperty:property andKeyValue:value];
 }
 
 //7, 删除一个表中所有信息
-+ (void)deleteReCordWithTableName:(NSString *)tableName
++ (void)deleteRecordWithTableName:(NSString *)tableName
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
     
@@ -298,6 +329,67 @@ static FMDBHelper *fmdbHelper;
 @end
 
 
+
+@implementation NSObject (FMDBHelper)
+
+#pragma mark - 插入记录
+- (BOOL)insertRecord {
+
+    return [FMDBHelper insertRecordWithModel:self];
+}
+
+#pragma mark - 修改记录
+- (void)updateRecordWithKeyProperty:(NSString *)keyProperty {
+    
+    [FMDBHelper updateRecordWithObject:self andKeyProperty:keyProperty];
+}
+
+#pragma mark - 删除记录
++ (void)deleteDataBaseTable {
+    
+    NSString *tableName = [NSString stringWithUTF8String:class_getName([self class])];
+    [FMDBHelper deleteRecordWithTableName:tableName];
+}
+// 根据对象, 删除其在数据库中的记录
+- (void)deleteRecord {
+
+    [FMDBHelper deleteRecordWithModel:self];
+}
+// 删除对象的指定属性, 指定值得数据库行
++ (void)deleteRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value {
+    
+    NSString *tableName = [NSString stringWithUTF8String:class_getName([self class])];
+    [FMDBHelper deleteRecordWithTableName:tableName andKeyProperty:property andKeyValue:value];
+}
+// 根据对象属性删除记录
+- (void)deleteRecordWithKeyProperty:(NSString *)property {
+    
+    [FMDBHelper deleteRecordWithModel:self andKeyProperty:property];
+}
+
+#pragma mark - 查找记录
++ (NSMutableArray *)getAllRecod {
+    
+    NSString *tableName = [NSString stringWithUTF8String:class_getName([self class])];
+    return [FMDBHelper getAllRecod:tableName];
+}
++ (NSMutableArray *)getRecordWithKeyProperty:(NSString *)property keyValue:(id)value {
+
+    NSString *tableName = [NSString stringWithUTF8String:class_getName([self class])];
+    return [FMDBHelper getRecordWithTableName:tableName keyProperty:property keyValue:value];
+}
+
+@end
+
+@implementation NSMutableArray (FMDBHelper)
+
+#pragma mark - 插入记录
+- (BOOL)insertRecord {
+    
+    return [FMDBHelper insertRecordWithModelArray:self];
+}
+
+@end
 
 
 
