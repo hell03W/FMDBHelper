@@ -203,7 +203,7 @@ static FMDBHelper *fmdbHelper;
 
 #pragma mark - 删除记录
 //6, 删除记录 删除某个属性等于某个值得一个记录   比如  id = 100
-+ (void)deleteRecordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value
++ (void)delRecordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
     
@@ -214,7 +214,7 @@ static FMDBHelper *fmdbHelper;
     [helper.fmdb executeUpdate:sqlString withArgumentsInArray:[NSArray arrayWithObject:value]];
 }
 
-+ (void)deleteRecordWithModel:(id)model
++ (void)delRecordWithModel:(id)model
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
     NSString *className = [NSString stringWithUTF8String:class_getName([model class])];
@@ -242,15 +242,15 @@ static FMDBHelper *fmdbHelper;
     [helper.fmdb executeUpdate:sqlString];
 }
 
-+ (void)deleteRecordWithModel:(id)model andKeyProperty:(NSString *)property
++ (void)delRecordWithModel:(id)model andKeyProperty:(NSString *)property
 {
     NSString *tableName = NSStringFromClass([model class]);
     id value = [model valueForKey:property];
-    [self deleteRecordWithTableName:tableName andKeyProperty:property andKeyValue:value];
+    [self delRecordWithTableName:tableName andKeyProperty:property andKeyValue:value];
 }
 
 //7, 删除一个表中所有信息
-+ (void)deleteRecordWithTableName:(NSString *)tableName
++ (void)delRecordWithTableName:(NSString *)tableName
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
     
@@ -343,26 +343,26 @@ static FMDBHelper *fmdbHelper;
 }
 
 #pragma mark - 删除记录
-+ (void)deleteDataBaseTable {
++ (void)delDataBaseTable {
     
     NSString *tableName = [NSString stringWithUTF8String:class_getName([self class])];
-    [FMDBHelper deleteRecordWithTableName:tableName];
+    [FMDBHelper delRecordWithTableName:tableName];
 }
 // 根据对象, 删除其在数据库中的记录
-- (void)deleteRecord {
+- (void)delRecord {
 
-    [FMDBHelper deleteRecordWithModel:self];
+    [FMDBHelper delRecordWithModel:self];
 }
 // 删除对象的指定属性, 指定值得数据库行
-+ (void)deleteRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value {
++ (void)delRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value {
     
     NSString *tableName = [NSString stringWithUTF8String:class_getName([self class])];
-    [FMDBHelper deleteRecordWithTableName:tableName andKeyProperty:property andKeyValue:value];
+    [FMDBHelper delRecordWithTableName:tableName andKeyProperty:property andKeyValue:value];
 }
 // 根据对象属性删除记录
-- (void)deleteRecordWithKeyProperty:(NSString *)property {
+- (void)delRecordWithKeyProperty:(NSString *)property {
     
-    [FMDBHelper deleteRecordWithModel:self andKeyProperty:property];
+    [FMDBHelper delRecordWithModel:self andKeyProperty:property];
 }
 
 #pragma mark - 查找记录
