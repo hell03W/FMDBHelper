@@ -57,7 +57,7 @@ static FMDBHelper *fmdbHelper;
 // 创建表格，自动添加ID作为主键
 - (void)createTable:(NSString *)tableName //tableName必须和模型名称相同
 {
-    //如果表已经存在，则停止创建
+    //如果表已经存在, 则停止创建
     if ([self isTableExist:tableName]) {
         return;
     }
