@@ -37,10 +37,10 @@
     [model updateRecordWithKeyProperty:@"name"];
     
     //3. 删除数据库中数据
-    [model deleteRecord];
-    [model deleteRecordWithKeyProperty:@"name"];
-    [DataModel deleteDataBaseTable];
-    [DataModel deleteRecordWithKeyProperty:@"name" andKeyValue:@"小明"];
+    [model delRecord];
+    [model delRecordWithKeyProperty:@"name"];
+    [DataModel delDataBaseTable];
+    [DataModel delRecordWithKeyProperty:@"name" andKeyValue:@"小明"];
     
     //4. 查找数据库中数据
     /// 获取对象名字在数据库中所有记录

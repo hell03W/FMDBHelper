@@ -98,3 +98,17 @@
 
 
 
+
+
+
+
+
+#pragma mark - 对FMDataBase加密, 使用 SQLCipher, 通过重载方法 实现加密
+@interface FMCipherDataBase : FMDatabase
+
++ (instancetype)databaseWithPath:(NSString *)inPath cipherKey:(NSString *)cipherKey;
+
+@end
+
+
+

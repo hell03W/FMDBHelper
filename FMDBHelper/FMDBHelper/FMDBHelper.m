@@ -18,6 +18,9 @@
 
 @end
 
+static NSString *databaseDictionary = @"Library/FMDBHelper.db";
+static NSString *databaseCipherKey = @"50edf75061592FA708167350E1CF61592FA708168be821eDF767368BE821E001cf61592fa7081";
+
 @implementation FMDBHelper
 @synthesize fmdb, fmrs;
 
@@ -31,8 +34,8 @@ static FMDBHelper *fmdbHelper;
         {
             if (!fmdbHelper) {
                 fmdbHelper = [[FMDBHelper alloc] init];
-                NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/FMDBHelper.db"];
-                fmdbHelper.fmdb = [FMDatabase databaseWithPath:path];
+                NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:databaseDictionary];
+                fmdbHelper.fmdb = [FMCipherDataBase databaseWithPath:path cipherKey:databaseCipherKey];
                 if (![fmdbHelper.fmdb open]) {
                     NSLog(@"创建数据库失败");
                     fmdbHelper = nil;
@@ -119,7 +122,7 @@ static FMDBHelper *fmdbHelper;
 {
     BOOL value = NO;
     FMDBHelper *helper = [FMDBHelper shareHelper];
-
+    
     //1, 获取属性的名字和值
     NSDictionary *dict = [AssignToObject dictionaryWithObject:object];
     NSArray *keys = [dict allKeys];
@@ -183,7 +186,7 @@ static FMDBHelper *fmdbHelper;
     {
         value = YES;
     }
-    return value;;
+    return value;
 }
 
 //5, 以model数组的形式请求插入用户数据
@@ -238,7 +241,7 @@ static FMDBHelper *fmdbHelper;
         [sqlString deleteCharactersInRange:NSMakeRange(sqlString.length-4, 4)];
     }
     
-
+    
     [helper.fmdb executeUpdate:sqlString];
 }
 
@@ -267,10 +270,10 @@ static FMDBHelper *fmdbHelper;
     NSDictionary *dict = [AssignToObject dictionaryWithObject:obj];
     NSArray *keys = [dict allKeys];
     NSArray *values = [dict allValues];
-
+    
     NSMutableString *sqlString = [NSMutableString string];
     [sqlString appendString:[NSString stringWithFormat:@"UPDATE %@ SET ",NSStringFromClass([obj class])]];
-
+    
     for (int i = 0; i < keys.count; i++)
     {
         [sqlString appendString:[keys objectAtIndex:i]];
@@ -292,7 +295,7 @@ static FMDBHelper *fmdbHelper;
 {
     FMDBHelper *helper = [FMDBHelper shareHelper];
     NSMutableArray *returnArray = [NSMutableArray array];
-
+    
     NSString *sqlString = [NSString stringWithFormat:@"SELECT * FROM %@", tableName];
     helper.fmrs = [helper.fmdb executeQuery:sqlString];
     
@@ -332,7 +335,7 @@ static FMDBHelper *fmdbHelper;
 
 #pragma mark - 插入记录
 - (BOOL)insertRecord {
-
+    
     return [FMDBHelper insertRecordWithModel:self];
 }
 
@@ -350,7 +353,7 @@ static FMDBHelper *fmdbHelper;
 }
 // 根据对象, 删除其在数据库中的记录
 - (void)delRecord {
-
+    
     [FMDBHelper delRecordWithModel:self];
 }
 // 删除对象的指定属性, 指定值得数据库行
@@ -372,7 +375,7 @@ static FMDBHelper *fmdbHelper;
     return [FMDBHelper getAllRecod:tableName];
 }
 + (NSMutableArray *)getRecordWithKeyProperty:(NSString *)property keyValue:(id)value {
-
+    
     NSString *tableName = [NSString stringWithUTF8String:class_getName([self class])];
     return [FMDBHelper getRecordWithTableName:tableName keyProperty:property keyValue:value];
 }
@@ -382,6 +385,7 @@ static FMDBHelper *fmdbHelper;
 @implementation NSArray (FMDBHelper)
 
 #pragma mark - 插入记录
+/// 插入数组中所有元素model元素到数据库
 - (BOOL)insertRecordFromArray {
     
     return [FMDBHelper insertRecordWithModelArray:self];
@@ -391,6 +395,98 @@ static FMDBHelper *fmdbHelper;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+#pragma mark - 对FMDataBase加密, 使用 SQLCipher, 通过重载方法 实现加密
+#import "sqlite3.h"
+
+@implementation FMCipherDataBase
+
+static NSString *DB_SECRETKEY = @"123456";
+
+
++ (instancetype)databaseWithPath:(NSString *)inPath cipherKey:(NSString *)cipherKey {
+    
+    FMCipherDataBase *database = [super databaseWithPath:inPath];
+    DB_SECRETKEY = cipherKey;
+    return database;
+}
+
+- (const char*)sqlitePath {
+    
+    if (!_databasePath) {
+        return ":memory:";
+    }
+    
+    if ([_databasePath length] == 0) {
+        return ""; // this creates a temporary database (it's an sqlite thing).
+    }
+    
+    return [_databasePath fileSystemRepresentation];
+    
+}
+
+- (BOOL)open {
+    if (_db) {
+        return YES;
+    }
+    
+    int err = sqlite3_open([self sqlitePath], (sqlite3**)&_db );
+    if(err != SQLITE_OK) {
+        NSLog(@"error opening!: %d", err);
+        return NO;
+    } else {
+        
+        [self setKey:DB_SECRETKEY];
+    }
+    
+    if (_maxBusyRetryTimeInterval > 0.0) {
+        // set the handler
+        [self setMaxBusyRetryTimeInterval:_maxBusyRetryTimeInterval];
+    }
+    
+    
+    return YES;
+}
+
+- (BOOL)openWithFlags:(int)flags vfs:(NSString *)vfsName {
+#if SQLITE_VERSION_NUMBER >= 3005000
+    if (_db) {
+        return YES;
+    }
+    
+    int err = sqlite3_open_v2([self sqlitePath], (sqlite3**)&_db, flags, [vfsName UTF8String]);
+    if(err != SQLITE_OK) {
+        NSLog(@"error opening!: %d", err);
+        return NO;
+    } else {
+        
+        [self setKey:DB_SECRETKEY];
+    }
+    
+    if (_maxBusyRetryTimeInterval > 0.0) {
+        // set the handler
+        [self setMaxBusyRetryTimeInterval:_maxBusyRetryTimeInterval];
+    }
+    
+    return YES;
+#else
+    NSLog(@"openWithFlags requires SQLite 3.5");
+    return NO;
+#endif
+}
+
+@end
 
 
 
