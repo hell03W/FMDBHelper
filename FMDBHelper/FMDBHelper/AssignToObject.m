@@ -26,7 +26,7 @@
         NSString *propertyStr = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
         [keys addObject:propertyStr];
     }
-    
+
     return keys;
 }
 

@@ -32,8 +32,9 @@
 
 #### FMDBHelper
 
-##### pragma mark 推荐使用以下的方法进行数据库操作, 以下方法包含了所有FMDBHelper的方法
-** NSObject的分类, 可以直接调用通过model对象调用相应的方法, 插入更新数据. **
+##### pragma mark 推荐使用以下的方法进行数据库操作, 以下方法包含了所有FMDBHelper的方法.
+
+**NSObject的分类, 可以直接调用通过model对象调用相应的方法, 插入更新数据.**
 
 **推荐使用model的类方法或者实例方法直接增删改查数据库数据.**
 
@@ -72,6 +73,8 @@
 
 @end
 ```
+
+**以前修改数据库的方法, 上面NSObject分类的方法, 实际上也是调用了下面的方法来实现数据库操作的.**
 
 ``` 
 @interface FMDBHelper : NSObject
