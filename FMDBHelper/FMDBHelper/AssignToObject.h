@@ -3,7 +3,7 @@
 //  SQ
 //
 //  Created by len on 15/10/6.
-//  Copyright (c) 2015年 wangze. All rights reserved.
+//  Copyright (c) 2015年 walden. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

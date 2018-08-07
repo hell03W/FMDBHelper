@@ -32,12 +32,12 @@
 
 #pragma mark - 删除记录
 //6, 删除记录 删除某个属性等于某个值得一个记录   比如  id = 100
-+ (void)deleteRecordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value;
-+ (void)deleteRecordWithModel:(id)model;
-+ (void)deleteRecordWithModel:(id)model andKeyProperty:(NSString *)property;
++ (void)delRecordWithTableName:(NSString *)tableName andKeyProperty:(NSString *)property andKeyValue:(id)value;
++ (void)delRecordWithModel:(id)model;
++ (void)delRecordWithModel:(id)model andKeyProperty:(NSString *)property;
 
 //7, 删除一个表中所有信息
-+ (void)deleteRecordWithTableName:(NSString *)tableName;
++ (void)delRecordWithTableName:(NSString *)tableName;
 
 
 #pragma mark - 修改记录
@@ -66,13 +66,13 @@
 
 #pragma mark - 删除记录
 /// 删除数据库表中对应数据库类名所有的数据
-+ (void)deleteDataBaseTable;
++ (void)delDataBaseTable;
 /// 根据对象, 删除其在数据库中的记录
-- (void)deleteRecord;
+- (void)delRecord;
 /// 删除对象的指定属性, 指定值得数据库行
-+ (void)deleteRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value;
++ (void)delRecordWithKeyProperty:(NSString *)property andKeyValue:(id)value;
 /// 根据对象keyProperty删除记录
-- (void)deleteRecordWithKeyProperty:(NSString *)property;
+- (void)delRecordWithKeyProperty:(NSString *)property;
 
 
 #pragma mark - 修改记录
@@ -93,6 +93,20 @@
 #pragma mark - 插入记录
 /// 插入数组中所有数据到数据库中, 可以是不同的对象
 - (BOOL)insertRecordFromArray;
+
+@end
+
+
+
+
+
+
+
+
+#pragma mark - 对FMDataBase加密, 使用 SQLCipher, 通过重载方法 实现加密
+@interface FMCipherDataBase : FMDatabase
+
++ (instancetype)databaseWithPath:(NSString *)inPath cipherKey:(NSString *)cipherKey;
 
 @end
 
